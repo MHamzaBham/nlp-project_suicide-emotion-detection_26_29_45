@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Suicide Classifier — Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen text-gray-900">
+    <main class="container mx-auto px-4 py-10 max-w-2xl">
+      <div class="bg-white rounded-2xl shadow-md p-8">
+        <h1 class="text-3xl font-extrabold text-blue-700 mb-2 flex items-center gap-2">
+          <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" /></svg>
+          Suicide Classifier
+        </h1>
+        <p class="mb-6 text-gray-600">
+          Enter text below and the model will return whether it predicts suicidal content.
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="mb-6">
+              {% for m in messages %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-2" role="alert">
+                  <span class="block sm:inline">{{ m }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="post" class="mb-8">
+          <label for="text_input" class="block mb-1 text-sm font-medium text-gray-700">Text to analyze</label>
+          <textarea
+            id="text_input"
+            name="text_input"
+            rows="6"
+            placeholder="Type or paste text here..."
+            class="resize-none w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+          ></textarea>
+          <div class="flex justify-end mt-4">
+            <button type="submit" class="inline-flex items-center px-5 py-2 bg-blue-600 text-white font-bold rounded-lg shadow hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400">
+              Analyze
+            </button>
+          </div>
+        </form>
+
+        <section class="mb-8">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3 flex items-center gap-2">
+            Model Artifacts
+          </h2>
+          {% if perf_exists.performance %}
+            <div class="flex flex-wrap gap-2 justify-center items-center p-2 bg-gray-50 rounded-lg border border-gray-100">
+              <img src="/static/metrics.png" alt="Model performance" class="w-100 max-w-full rounded shadow-sm border border-gray-200" />
+              {% if perf_exists.training %}
+                <img src="/static/training_curves.png" alt="Training curves" class="w-100 max-w-full rounded shadow-sm border border-gray-200" />
+              {% endif %}
+              {% if perf_exists.confusion %}
+                <img src="/static/confusion_matrix.png" alt="Confusion matrix" class="w-100 max-w-full rounded shadow-sm border border-gray-200" />
+              {% endif %}
+            </div>
+          {% else %}
+            <p class="text-sm text-gray-500 bg-yellow-50 border-l-4 border-yellow-400 rounded p-3">
+              No performance images found in <code class="bg-gray-100 px-1 py-0.5 rounded text-xs text-blue-800">&nbsp;/static&nbsp;</code>. Run training notebook to generate them (or copy them here).
+            </p>
+          {% endif %}
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
